@@ -1,100 +1,121 @@
 #include "sort.h"
 
 /**
- * quick_sort - sorts an array with quicksort algorithm
- * @array: array to be sorted
- * @size: size of the array
+ * partition - matching teacher's output Hoare
+ *
+ * @array: array of int
+ * @lo: lowest index to compare
+ * @hi: highest index to compare
+ * @size: size of array (for printing)
+ * The pivot is assigned to be the last element in the partition
+ * Return: point of convergence between lo and hi
+ */
+size_t partition(int *array, size_t lo, size_t hi, size_t size)
+{
+	size_t i, j;
+	int tmp, pivot;
+
+	pivot = array[hi];
+	i = lo - 1;
+	j = hi + 1;
+	while (1)
+	{
+		do {
+			--j;
+		} while (array[j] > pivot);
+		do {
+			++i;
+		} while (array[i] < pivot);
+		if (i < j)
+		{
+			tmp = array[i];
+			array[i] = array[j];
+			array[j] = tmp;
+			print_array(array, size);
+		}
+		else
+		{
+			return (i);
+		}
+	}
+}
+
+
+/**
+ * partition_2 - partition ?
+ * @array: array of int
+ * @lo: lowest index to compare
+ * @hi: highest index to compare
+ * @size: size of array (for printing)
+ * The pivot is assigned to be the last element in the partition
+ * Return: point of convergence between lo and hi
+ */
+size_t partition_2(int *array, size_t lo, size_t hi, size_t size)
+{
+	size_t i, j;
+	int tmp;
+
+	i = lo - 1;
+	j = hi;
+
+	while (1)
+	{
+		while (array[++i] < array[hi])
+		{
+			if (i >= hi)
+				break;
+		}
+		while (array[--j] > array[hi])
+		{
+			if (j <= lo)
+				break;
+		}
+		if (i >= j)
+			break;
+		tmp = array[i];
+		array[i] = array[j];
+		array[j] = tmp;
+		print_array(array, size);
+	}
+	if (i != hi) 
+	{
+		tmp = array[hi];
+		array[hi] = array[i];
+		array[i] = tmp;
+		print_array(array, size);
+	}
+	return (i); 
+}
+
+/**
+ * qs_recursion - quick sort core
+ * @array: array of in
+ * @lo: lower index
+ * @hi: higher index
+ * @size: size of array
+ */
+void qs_recursion(int *array, size_t lo, size_t hi, size_t size)
+{
+	size_t p;
+
+	if (hi <= lo)
+		return;
+	p = partition(array, lo, hi, size);
+	if (p > 0) 
+		qs_recursion(array, lo, p - 1, size);
+	qs_recursion(array, p, hi, size);
+}
+
+
+/**
+ * quick_sort - sort an array with quick sort
+ * @array: array of int
+ * @size: size of array
  */
 void quick_sort(int *array, size_t size)
 {
-	int wall, pivot;
 
-	if (array && size > 1)
-	{
-		wall = 0;
-		pivot = (size - 1);
-
-		quick_sort_dup(wall, pivot, array, size);
-	}
-}
-/**
- * quick_sort_dup - recursively (divide & conquer) partition and repeat
- * @wall: beginning of sub array to sort
- * @pivot: end of sub array to sort and pivot point
- * @a: the beginning of the array, for printing purposes
- * @s: size of entire array for printing
- */
-void quick_sort_dup(int wall, int pivot, int *a, size_t s)
-{
-	int first_wall, second_wall, new_pivot;
-
-	if (wall < pivot)
-	{
-		second_wall = partition(wall, pivot, a, s);
-
-		first_wall = wall;
-		new_pivot = second_wall - 1;
-
-		if (first_wall != new_pivot && second_wall != pivot)
-			new_pivot--;
-
-		quick_sort_dup(first_wall, new_pivot, a, s);
-		quick_sort_dup(second_wall, pivot, a, s);
-	}
-}
-/**
- * partition - divides and sorts an array into sub arrays semi-sorted
- * @wall: beginning of array partition
- * @pivot: end of array to partition
- * @a: the beginning of the array, for printing purposes
- * @s: size of entire array for printing
- *
- * Return: the new wall barrier
- */
-int partition(int wall, int pivot, int *a, size_t s)
-{
-	int i;
-
-	i = wall;
-
-	while (i != pivot)
-	{
-		if (a[i] < a[pivot])
-		{
-			if (i != wall)
-			{
-				swap_int(a + i, a + wall);
-				print_array(a, s);
-			}
-			i++;
-			wall++;
-		}
-		else
-			i++;
-	}
-	if (wall != pivot)
-	{
-		if (a[wall] > a[pivot])
-		{
-			swap_int(a + pivot, a + wall);
-			print_array(a, s);
-		}
-		wall++;
-	}
-	return (wall);
-}
-
-/**
-  * swap_int - swap two integers
-  * @a: integer 1
-  * @b: interger 2
-  */
-void swap_int(int *a, int *b)
-{
-	int temp;
-
-	temp = *a;
-
-	*a = *b;
-	*b = temp;
+	if (!array || size < 2)
+		return;
+	qs_recursion(array, 0, size - 1, size);
 }
