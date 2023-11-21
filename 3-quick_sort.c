@@ -27,12 +27,12 @@ void trade(int *a, int *b)
 size_t parti(int *array, size_t start, size_t end, size_t size)
 {
 	size_t i, j;
-	int pivot = array[end];
+	int pvt = array[end];
 
 	i = start - 1;
 	for (j = start; j < end; j++)
 	{
-		if (array[j] < pivot)
+		if (array[j] < pvt)
 		{
 			i++;
 			if (i != j)
@@ -43,7 +43,7 @@ size_t parti(int *array, size_t start, size_t end, size_t size)
 		}
 	}
 
-	if (pivot < array[i + 1])
+	if (pvt < array[i + 1])
 	{
 		trade(&array[i + 1], &array[end]);
 		print_array(array, size);
