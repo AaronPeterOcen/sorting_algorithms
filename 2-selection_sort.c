@@ -1,58 +1,42 @@
 #include "sort.h"
 
 /**
- * min - search for snallest element
- * @array: The array to search
- * @size: Number of elements in @array
+ * selection_sort - sorts an array of integers in ascending
+ * order using the Selection sort algorithm
  *
- * Return: address of the minimum item of the array
+ * @array: array of integers
+ *
+ * @size: size of array
+ *
  */
-int *min(int *array, size_t size)
-{
-	int *minimum = &array[0];
 
-	while (size--)
-	{
-		if (array[size] < *minimum)
-		{
-			minimum = &array[size];
-		}
-	}
-
-	return (minimum);
-}
-
-/**
- * selection_sort - sort array using selection sort
- * algo
- *
- * @array: The array to be printed
- * @size: Number of elements in @array
- *
- * Return: void
- */
 void selection_sort(int *array, size_t size)
 {
-	size_t i = 0;
+	size_t i, j, minidx;
 	int tmp;
-	int *mn;
+	int flag;
 
-	if (!array || size < 2)
+	if (size <= 1)
 		return;
 
-	for (; i < size; i++)
+	for (i = 0; i < size - 1; i++)
 	{
-		mn = min(&array[i], size - i);
-		tmp = 0;
-
-		if (&array[i] != mn)
+		minidx = i;
+		for (j = i + 1; j < size; j++)
 		{
-			tmp = array[i];
-
-			array[i] = *mn;
-			*mn = tmp;
-
+			if (array[j] < array[minidx])
+			{
+				minidx = j;
+				flag = 1;
+			}
+		}
+		if (flag == 1)
+		{
+			tmp = array[minidx];
+			array[minidx] = array[i];
+			array[i] = tmp;
 			print_array(array, size);
+			flag = 0;
 		}
 	}
 }
