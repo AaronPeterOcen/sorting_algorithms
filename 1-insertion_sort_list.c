@@ -1,69 +1,49 @@
 #include "sort.h"
 
-
-/**
- * swap - swap 2 elements in a doubly linked list
- * @list: linked list
- * @to_swap: element to swap
- * @compare: element to swap, place before to_swap
- */
-void swap(listint_t **list, listint_t *to_swap, listint_t *compare)
-{
-	listint_t *tmp2;
-
-	/*swap nodes*/
-	if (compare->next == to_swap)
-	{
-		if (to_swap->next)
-			(to_swap->next)->prev = compare;
-		tmp2 = to_swap->next;
-		to_swap->next = compare;
-		compare->next = tmp2;
-		tmp2 = to_swap->prev;
-		to_swap->prev = compare->prev;
-		compare->prev = to_swap;
-	}
-	else
-	{
-		if (to_swap->next)
-			(to_swap->next->prev) = compare;
-		(to_swap->prev)->next = compare;
-		(compare->next)->prev = to_swap;
-		tmp2 = to_swap->next;
-		to_swap->next = compare->next;
-		compare->next = tmp2;
-		tmp2 = to_swap->prev;
-		to_swap->prev = compare->prev;
-		compare->prev = tmp2;
-	}
-	if (to_swap->prev)
-		(to_swap->prev)->next = to_swap;
-	else
-		*list = to_swap;
-}
-
 /**
  * insertion_sort_list - sort a linked list with insertion sort
  * @list: a linked list
  */
 void insertion_sort_list(listint_t **list)
 {
-	listint_t *tmp, *to_swap, *compare;
+	listint_t *tmp1, *tmp2, *a1, *a2;
+	int flag;
 
-	if (!list || !*list || (*list)->next == NULL)
-		return;
-
-	tmp = *list;
-	while (tmp)
+	if (list)
 	{
-		to_swap = tmp; /*mark the candidate to insert on the left*/
-		compare = tmp->prev; /*start of the reverse loop*/
-		tmp = tmp->next; /*move tmp, in case of swap, otherwise we lose it*/
-		while (compare && (compare->n > to_swap->n))
+		tmp1 = *list;
+		tmp2 = *list;
+		while (list && tmp1->next)
 		{
-			swap(list, to_swap, compare);
-			compare = to_swap->prev;
-			print_list(*list);
+			if (tmp1->next)
+			{
+				flag = 0;
+				tmp2 = tmp1;
+				while (tmp2 && tmp2->n > tmp2->next->n)
+				{
+					a1 = tmp2;
+					a2 = tmp2->next;
+					a1->next = a2->next;
+					if (a2->next)
+						a2->next->prev = a1;
+					if (a2)
+					{
+						a2->prev = a1->prev;
+						a2->next = a1;
+					}
+					if (a1)
+						a1->prev = a2;
+					if (a2->prev)
+						a2->prev->next = a2;
+					tmp2 = a2->prev;
+					if (!a2->prev)
+						*list = a2;
+					print_list(*list);
+					flag = 1;
+				}
+			}
+			if (flag == 0)
+				tmp1 = tmp1->next;
 		}
 	}
 }
